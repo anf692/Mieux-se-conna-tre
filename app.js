@@ -41,5 +41,21 @@ function showSuccess(input) {
   if (errorMsg) errorMsg.remove()
 }
 
+function validateText(input) {
+  const valeur = input.value.trim() // trim() enlève les espaces au début et à la fin
+
+  if (valeur === "") {
+    showError(input, "Ce champ est obligatoire")
+    return false
+  }
+  
+  if (valeur.length < 3) {
+    showError(input, "Minimum 3 caractères")
+    return false
+  }
+
+  showSuccess(input)
+  return true
+}
 
 
