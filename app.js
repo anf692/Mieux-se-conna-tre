@@ -58,4 +58,20 @@ function validateText(input) {
   return true
 }
 
+function validateEmail(input) {
+  const valeur = input.value.trim() // 1. On récupère le texte
+
+  if (valeur === "") {
+    showError(input, "Ce champ est obligatoire")
+    return false
+  }
+
+  if (!valeur.includes("@")) { // 2. On vérifie le @
+    showError(input, "Email invalide, le @ est manquant")
+    return false
+  }
+
+  showSuccess(input)
+  return true
+}
 
