@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form id="monFormulaire">
+
+        <label for="nomcomplet">Prénom + Nom</label>
+        <input type="text" id="nomcomplet" name="nomcomplet">
+        
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email">
+
+        <label for="domaine">Ton domaine</label>
+        <select name="domaine" id="domaine">
+            <option value="">Sélectionne ton domaine...</option>
+            <option value="informatique">Front-End</option>
+            <option value="sante">Back-End</option>
+            <option value="education">Design/UX</option>
+            <option value="finance">Data</option>
+        </select>
+
+
+        <label for="matin">Chrono-type du matin</label>
+        <input type="radio" id="matin" name="chrono" value="matin">
+
+        <label for="soir">Chrono-type du soir</label>
+        <input type="radio" id="soir" name="chrono" value="soir">
+
+        <label for="veille-tech">Veille Tech </label>
+        <input type="checkbox" id="veille-tech" name="passion" value="veille-tech">
+        <label for="gaming">Gaming </label>
+        <input type="checkbox" id="gaming" name="passion" value="gaming">
+        <label for="sport">Sport </label>
+        <input type="checkbox" id="sport" name="passion" value="sport">
+        <label for="musique">Musique </label>
+        <input type="checkbox" id="musique" name="passion" value="musique">
+        <label for="lecture">Lecture </label>
+        <input type="checkbox" id="lecture" name="passion" value="lecture">
+
+        <label for="message">Présentation libre</label>
+        <textarea id="message" name="message" minlength="25" maxlength="255"></textarea>
+
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <script src="./app.js"></script>
+</body>
+</html>

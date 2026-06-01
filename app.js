@@ -1,0 +1,45 @@
+// Ce qu'il faut faire
+const form = document.getElementById("monFormulaire")
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault()
+  
+
+  // Comme ça on lit les valeurs AU MOMENT où l'utilisateur soumet
+  const nomComplet = document.getElementById("nomcomplet").value
+  const email = document.getElementById("email").value
+  const domaine = document.getElementById("domaine").value
+  const message = document.getElementById("message").value
+  const chronoType = document.querySelector('input[name="chrono"]:checked')
+  const passions = document.querySelectorAll('input[name="passion"]:checked')
+})
+
+
+function showError(input, message) {
+  input.classList.remove("success")
+  input.classList.add("error")
+
+  // On cherche s'il y a déjà un message d'erreur
+  let errorMsg = input.parentElement.querySelector(".error-message")
+  
+  // S'il n'existe pas encore, on le crée
+  if (!errorMsg) {
+    errorMsg = document.createElement("span")
+    errorMsg.classList.add("error-message")
+    input.parentElement.appendChild(errorMsg)
+  }
+  
+  errorMsg.textContent = message
+}
+
+function showSuccess(input) {
+  input.classList.remove("error")
+  input.classList.add("success")
+
+  // On supprime le message d'erreur s'il existe
+  const errorMsg = input.parentElement.querySelector(".error-message")
+  if (errorMsg) errorMsg.remove()
+}
+
+
+
