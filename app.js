@@ -12,6 +12,25 @@ form.addEventListener("submit", function(event) {
     const message = document.getElementById("message").value
     const chronoType = document.querySelector('input[name="chrono"]:checked')
     const passions = document.querySelectorAll('input[name="passion"]:checked')
+
+    const estValide = validateText(document.getElementById("nomcomplet")) &&
+                  validateEmail(document.getElementById("email")) &&
+                  validateSelect(document.getElementById("domaine")) &&
+                  validateTextarea(document.getElementById("message")) &&
+                  validateRadio("chrono") &&
+                  validateCheckbox("passion")
+
+    if (estValide) {
+        alert("Formulaire soumis avec succès !")
+        form.reset() // Réinitialise le formulaire
+        // On peut aussi supprimer les classes success/error et les messages d'erreur
+        const inputs = form.querySelectorAll("input, select, textarea")
+        inputs.forEach(input => {
+            input.classList.remove("success", "error")
+            const errorMsg = input.parentElement.querySelector(".error-message")
+            if (errorMsg) errorMsg.remove()
+        })
+    }
 })
 
 
@@ -136,3 +155,35 @@ function validateTextarea(input) {
     showSuccess(input)
     return true
 }
+
+// Ajout d'écouteurs d'événements pour validation en temps réel
+document.getElementById("nomcomplet").addEventListener("blur", function() {
+  validateText(this)
+})
+
+document.getElementById("email").addEventListener("blur", function() {
+  validateEmail(this)
+})
+
+document.getElementById("domaine").addEventListener("change", function() {
+  validateSelect(this)
+})
+
+document.getElementById("message").addEventListener("input", function() {
+  validateTextarea(this)
+})
+
+const chronos = document.querySelectorAll('input[name="chrono"]')
+chronos.forEach(chrono => {
+  chrono.addEventListener("change", function() {
+    validateRadio("chrono")
+  })
+})
+
+const passions = document.querySelectorAll('input[name="passion"]')
+passions.forEach(passion => {
+  passion.addEventListener("change", function() {
+    validateCheckbox("passion")
+  })
+})
+
