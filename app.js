@@ -100,3 +100,17 @@ function validateRadio(name) {
   return true
 }
 
+
+function validateCheckbox(name) {
+  const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`)
+  const premierCheckbox = document.querySelector(`input[name="${name}"]`)
+
+  if (checkboxes.length < 2) {
+    showError(premierCheckbox, "Veuillez sélectionner au moins 2 passions")
+    return false
+  }
+
+  showSuccess(premierCheckbox)
+  return true
+}
+
