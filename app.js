@@ -75,3 +75,14 @@ function validateEmail(input) {
   return true
 }
 
+function validateSelect(input) {
+  const valeur = input.value
+
+  if (valeur === "") {
+    showError(input, "Veuillez sélectionner un domaine")
+    return false
+  }
+
+  showSuccess(input)
+  return true
+}
