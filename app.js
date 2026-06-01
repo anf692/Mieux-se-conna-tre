@@ -1,189 +1,395 @@
-// Ce qu'il faut faire
-const form = document.getElementById("monFormulaire")
+// ════════════════════════════════════════
+// AFFICHER UNE ERREUR SUR UN CHAMP
+// ════════════════════════════════════════
+function afficherErreur(champ, texteErreur) {
+    champ.classList.remove("succes")
+    champ.classList.add("erreur")
 
-form.addEventListener("submit", function(event) {
-    event.preventDefault()
+    let messageExistant = champ.parentElement.querySelector(".message-erreur")
 
-
-    // Comme ça on lit les valeurs AU MOMENT où l'utilisateur soumet
-    const nomComplet = document.getElementById("nomcomplet").value
-    const email = document.getElementById("email").value
-    const domaine = document.getElementById("domaine").value
-    const message = document.getElementById("message").value
-    const chronoType = document.querySelector('input[name="chrono"]:checked')
-    const passions = document.querySelectorAll('input[name="passion"]:checked')
-
-    const estValide = validateText(document.getElementById("nomcomplet")) &&
-                  validateEmail(document.getElementById("email")) &&
-                  validateSelect(document.getElementById("domaine")) &&
-                  validateTextarea(document.getElementById("message")) &&
-                  validateRadio("chrono") &&
-                  validateCheckbox("passion")
-
-    if (estValide) {
-        alert("Formulaire soumis avec succès !")
-        form.reset() // Réinitialise le formulaire
-        // On peut aussi supprimer les classes success/error et les messages d'erreur
-        const inputs = form.querySelectorAll("input, select, textarea")
-        inputs.forEach(input => {
-            input.classList.remove("success", "error")
-            const errorMsg = input.parentElement.querySelector(".error-message")
-            if (errorMsg) errorMsg.remove()
-        })
-    }
-})
-
-
-function showError(input, message) {
-    input.classList.remove("success")
-    input.classList.add("error")
-
-    // On cherche s'il y a déjà un message d'erreur
-    let errorMsg = input.parentElement.querySelector(".error-message")
-
-    // S'il n'existe pas encore, on le crée
-    if (!errorMsg) {
-    errorMsg = document.createElement("span")
-    errorMsg.classList.add("error-message")
-    input.parentElement.appendChild(errorMsg)
+    if (!messageExistant) {
+    messageExistant = document.createElement("span")
+    messageExistant.classList.add("message-erreur")
+    champ.parentElement.appendChild(messageExistant)
     }
 
-    errorMsg.textContent = message
+    messageExistant.textContent = texteErreur
 }
 
-function showSuccess(input) {
-    input.classList.remove("error")
-    input.classList.add("success")
 
-    // On supprime le message d'erreur s'il existe
-    const errorMsg = input.parentElement.querySelector(".error-message")
-    if (errorMsg) errorMsg.remove()
+// ════════════════════════════════════════
+// AFFICHER UN SUCCÈS SUR UN CHAMP
+// ════════════════════════════════════════
+function afficherSucces(champ) {
+    champ.classList.remove("erreur")
+    champ.classList.add("succes")
+
+    const messageExistant = champ.parentElement.querySelector(".message-erreur")
+    if (messageExistant) messageExistant.remove()
 }
 
-function validateText(input) {
-    const valeur = input.value.trim() // trim() enlève les espaces au début et à la fin
+
+// ════════════════════════════════════════
+// AFFICHER UNE ERREUR POUR UN GROUPE
+// (radio ou checkbox)
+// ════════════════════════════════════════
+function afficherErreurGroupe(idConteneur, texteErreur) {
+    const conteneur = document.getElementById(idConteneur)
+    conteneur.innerHTML = `<div class="erreur-groupe">${texteErreur}</div>`
+}
+
+function effacerErreurGroupe(idConteneur) {
+    document.getElementById(idConteneur).innerHTML = ""
+}
+
+
+// ════════════════════════════════════════
+// VALIDER LE CHAMP PRÉNOM / NOM
+// ════════════════════════════════════════
+function validerPrenomNom(champ) {
+    const valeur = champ.value.trim()
 
     if (valeur === "") {
-    showError(input, "Ce champ est obligatoire")
+    afficherErreur(champ, "Ce champ est obligatoire")
     return false
     }
-
     if (valeur.length < 3) {
-    showError(input, "Minimum 3 caractères")
+    afficherErreur(champ, "Minimum 3 caractères requis")
     return false
     }
 
-    showSuccess(input)
+    afficherSucces(champ)
     return true
 }
 
-function validateEmail(input) {
-    const valeur = input.value.trim() // 1. On récupère le texte
+
+// ════════════════════════════════════════
+// VALIDER LE CHAMP EMAIL
+// ════════════════════════════════════════
+function validerEmail(champ) {
+    const valeur = champ.value.trim()
 
     if (valeur === "") {
-    showError(input, "Ce champ est obligatoire")
+    afficherErreur(champ, "L'email est obligatoire")
+    return false
+    }
+    if (!valeur.includes("@") || !valeur.includes(".")) {
+    afficherErreur(champ, "Format invalide — ex: nom@domaine.com")
     return false
     }
 
-    if (!valeur.includes("@")) { // 2. On vérifie le @
-    showError(input, "Email invalide, le @ est manquant")
-    return false
-    }
-
-    showSuccess(input)
+    afficherSucces(champ)
     return true
 }
 
-function validateSelect(input) {
-    const valeur = input.value
+
+// ════════════════════════════════════════
+// VALIDER LE SELECT (liste déroulante)
+// ════════════════════════════════════════
+function validerSelect(champ) {
+    if (champ.value === "") {
+    afficherErreur(champ, "Fais un choix pour continuer")
+    return false
+    }
+
+    afficherSucces(champ)
+    return true
+}
+
+
+// ════════════════════════════════════════
+// VALIDER LES BOUTONS RADIO
+// ════════════════════════════════════════
+function validerRadio(nomGroupe) {
+    const choixCoche = document.querySelector(`input[name="${nomGroupe}"]:checked`)
+    const tousLesRadios = document.querySelectorAll(`input[name="${nomGroupe}"]`)
+
+    if (!choixCoche) {
+    afficherErreurGroupe("erreur-chrono", "Sélectionne une option pour continuer")
+    tousLesRadios.forEach(function(radio) {
+        radio.closest(".carte-radio").classList.add("erreur-carte")
+    })
+    return false
+    }
+
+    effacerErreurGroupe("erreur-chrono")
+    tousLesRadios.forEach(function(radio) {
+    radio.closest(".carte-radio").classList.remove("erreur-carte")
+    })
+    return true
+}
+
+
+// ════════════════════════════════════════
+// VALIDER LES CASES À COCHER (passions)
+// ════════════════════════════════════════
+function validerPassions(nomGroupe) {
+    const casesChoisies = document.querySelectorAll(`input[name="${nomGroupe}"]:checked`)
+    const toutesLesCases = document.querySelectorAll(`input[name="${nomGroupe}"]`)
+
+    if (casesChoisies.length < 2) {
+    afficherErreurGroupe("erreur-passion", `${casesChoisies.length}/2 sélectionnée(s) — coche au moins 2 passions`)
+    toutesLesCases.forEach(function(caseACocher) {
+        caseACocher.closest(".carte-passion").classList.add("erreur-carte")
+    })
+    return false
+    }
+
+    effacerErreurGroupe("erreur-passion")
+    toutesLesCases.forEach(function(caseACocher) {
+    caseACocher.closest(".carte-passion").classList.remove("erreur-carte")
+    })
+    return true
+}
+
+
+// ════════════════════════════════════════
+// VALIDER LA ZONE DE TEXTE (textarea)
+// ════════════════════════════════════════
+function validerMessage(champ) {
+    const valeur = champ.value.trim()
 
     if (valeur === "") {
-    showError(input, "Veuillez sélectionner un domaine")
+    afficherErreur(champ, "Ce champ est obligatoire")
     return false
     }
-
-    showSuccess(input)
-    return true
-}
-
-function validateRadio(name) {
-    const radio = document.querySelector(`input[name="${name}"]:checked`)
-    const premierRadio = document.querySelector(`input[name="${name}"]`)
-
-    if (!radio) {
-    showError(premierRadio, "Veuillez sélectionner une option")
-    return false
-    }
-
-    showSuccess(premierRadio)
-    return true
-}
-
-
-function validateCheckbox(name) {
-    const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`)
-    const premierCheckbox = document.querySelector(`input[name="${name}"]`)
-
-    if (checkboxes.length < 2) {
-    showError(premierCheckbox, "Veuillez sélectionner au moins 2 passions")
-    return false
-    }
-
-    showSuccess(premierCheckbox)
-    return true
-}
-
-
-function validateTextarea(input) {
-    const valeur = input.value.trim()
-
-    if (valeur === "") {
-    showError(input, "Ce champ est obligatoire")
-    return false
-    }
-
     if (valeur.length < 25) {
-    showError(input, "Minimum 25 caractères")
+    afficherErreur(champ, `Encore ${25 - valeur.length} caractère(s) minimum`)
     return false
     }
-
     if (valeur.length > 255) {
-    showError(input, "Maximum 255 caractères")
+    afficherErreur(champ, "Maximum 255 caractères atteint")
     return false
     }
 
-    showSuccess(input)
+    afficherSucces(champ)
     return true
 }
 
-// Ajout d'écouteurs d'événements pour validation en temps réel
-document.getElementById("nomcomplet").addEventListener("blur", function() {
-  validateText(this)
+
+// ════════════════════════════════════════
+// VALIDER TOUTE UNE PAGE
+// ════════════════════════════════════════
+function validerPage(numeroDePage) {
+
+    if (numeroDePage === 1) {
+    const ok1 = validerPrenomNom(document.getElementById("prenom-nom"))
+    const ok2 = validerEmail(document.getElementById("email"))
+    return ok1 && ok2
+    }
+
+    if (numeroDePage === 2) {
+    const ok1 = validerSelect(document.getElementById("domaine"))
+    const ok2 = validerRadio("chrono")
+    return ok1 && ok2
+    }
+
+    if (numeroDePage === 3) {
+    return validerPassions("passion")
+    }
+
+    if (numeroDePage === 4) {
+    return validerMessage(document.getElementById("message"))
+    }
+
+    return true
+}
+
+
+// ════════════════════════════════════════
+// NAVIGATION : ALLER À LA PAGE SUIVANTE
+// ════════════════════════════════════════
+function allerPageSuivante(pageActuelle) {
+    if (!validerPage(pageActuelle)) return
+
+    marquerEtapeTerminee(pageActuelle)
+    afficherPage(pageActuelle + 1)
+    remplirLigne(pageActuelle)
+}
+
+
+// ════════════════════════════════════════
+// NAVIGATION : ALLER À LA PAGE PRÉCÉDENTE
+// ════════════════════════════════════════
+function allerPagePrecedente(pageActuelle) {
+    afficherPage(pageActuelle - 1)
+}
+
+
+// ════════════════════════════════════════
+// AFFICHER UNE PAGE ET METTRE À JOUR LE STEPPER
+// ════════════════════════════════════════
+function afficherPage(numeroDePage) {
+    // Cacher toutes les pages
+    document.querySelectorAll(".page-formulaire").forEach(function(page) {
+    page.classList.remove("active")
+    })
+    // Afficher la bonne page
+    document.getElementById("page-" + numeroDePage).classList.add("active")
+
+    // Mettre à jour le stepper
+    document.querySelectorAll(".etape").forEach(function(etape) {
+    etape.classList.remove("actif")
+    etape.querySelector(".etape-cercle").classList.remove("actif")
+    })
+
+    const etapeActive = document.querySelector(`.etape[data-numero="${numeroDePage}"]`)
+    etapeActive.classList.add("actif")
+    etapeActive.querySelector(".etape-cercle").classList.add("actif")
+
+    window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
+
+// ════════════════════════════════════════
+// MARQUER UNE ÉTAPE COMME TERMINÉE
+// ════════════════════════════════════════
+function marquerEtapeTerminee(numeroEtape) {
+    const etape = document.querySelector(`.etape[data-numero="${numeroEtape}"]`)
+    const cercle = etape.querySelector(".etape-cercle")
+
+    cercle.classList.remove("actif")
+    cercle.classList.add("termine")
+    cercle.textContent = "✓"
+
+    etape.classList.add("termine")
+    etape.classList.remove("actif")
+}
+
+
+// ════════════════════════════════════════
+// REMPLIR LA LIGNE ENTRE LES ÉTAPES
+// ════════════════════════════════════════
+function remplirLigne(numeroEtape) {
+    const ligne = document.getElementById("ligne-" + numeroEtape)
+    if (ligne) ligne.classList.add("termine")
+}
+
+
+// ════════════════════════════════════════
+// FEEDBACK EN TEMPS RÉEL (pendant la saisie)
+// ════════════════════════════════════════
+document.getElementById("prenom-nom").addEventListener("blur", function() {
+    validerPrenomNom(this)
 })
 
 document.getElementById("email").addEventListener("blur", function() {
-  validateEmail(this)
+    validerEmail(this)
 })
 
 document.getElementById("domaine").addEventListener("change", function() {
-  validateSelect(this)
+    validerSelect(this)
 })
 
 document.getElementById("message").addEventListener("input", function() {
-  validateTextarea(this)
+    validerMessage(this)
+    mettreAJourCompteur(this)
 })
 
-const chronos = document.querySelectorAll('input[name="chrono"]')
-chronos.forEach(chrono => {
-  chrono.addEventListener("change", function() {
-    validateRadio("chrono")
-  })
+document.querySelectorAll('input[name="chrono"]').forEach(function(radio) {
+    radio.addEventListener("change", function() {
+    validerRadio("chrono")
+    // Style visuel : cocher la carte sélectionnée
+    document.querySelectorAll(".carte-radio").forEach(function(carte) {
+        carte.classList.remove("selectionnee")
+    })
+    this.closest(".carte-radio").classList.add("selectionnee")
+    })
 })
 
-const passions = document.querySelectorAll('input[name="passion"]')
-passions.forEach(passion => {
-  passion.addEventListener("change", function() {
-    validateCheckbox("passion")
-  })
+document.querySelectorAll('input[name="passion"]').forEach(function(caseACocher) {
+    caseACocher.addEventListener("change", function() {
+    validerPassions("passion")
+    // Style visuel : cocher/décocher la carte
+    const carte = this.closest(".carte-passion")
+    if (this.checked) {
+        carte.classList.add("selectionnee")
+    } else {
+        carte.classList.remove("selectionnee")
+    }
+    })
 })
+
+
+// ════════════════════════════════════════
+// COMPTEUR DE CARACTÈRES
+// ════════════════════════════════════════
+function mettreAJourCompteur(textarea) {
+    const nombreCaracteres = textarea.value.length
+    const restants = 255 - nombreCaracteres
+    const elementCompteur = document.getElementById("compteur")
+
+    elementCompteur.textContent = restants + " caractère(s) restant(s)"
+    elementCompteur.className = "compteur-caracteres"
+
+    if (nombreCaracteres >= 230) {
+    elementCompteur.classList.add("danger")
+    } else if (nombreCaracteres >= 200) {
+    elementCompteur.classList.add("avertissement")
+    }
+}
+
+
+// ════════════════════════════════════════
+// AFFICHER LA CARTE DE PROFIL
+// ════════════════════════════════════════
+function afficherCarteProfil() {
+    const nom     = document.getElementById("prenom-nom").value.trim()
+    const email   = document.getElementById("email").value.trim()
+    const domaine = document.getElementById("domaine").value
+    const chrono  = document.querySelector('input[name="chrono"]:checked').value
+    const passions = [...document.querySelectorAll('input[name="passion"]:checked')].map(function(c) { return c.value })
+    const message = document.getElementById("message").value.trim()
+
+    const carteProfil = document.createElement("div")
+    carteProfil.classList.add("carte-profil")
+
+    carteProfil.innerHTML = `
+    <span class="badge-succes">✓ Profil créé</span>
+    <h2>${nom}</h2>
+    <div class="ligne-profil">
+        <span class="label-profil">Email</span>
+        <span class="valeur-profil">${email}</span>
+    </div>
+    <div class="ligne-profil">
+        <span class="label-profil">Domaine</span>
+        <span class="valeur-profil">${domaine}</span>
+    </div>
+    <div class="ligne-profil">
+        <span class="label-profil">Chrono-type</span>
+        <span class="valeur-profil">${chrono === "matin" ? "☀️ Early Bird" : "🦉 Night Owl"}</span>
+    </div>
+    <div class="ligne-profil">
+        <span class="label-profil">Passions</span>
+        <span class="valeur-profil">${passions.map(function(p) { return `<span class="etiquette-passion">${p}</span>` }).join("")}</span>
+    </div>
+    <div class="ligne-profil">
+        <span class="label-profil">Anecdote</span>
+        <span class="valeur-profil">${message}</span>
+    </div>
+    `
+
+    document.querySelector(".carte-formulaire").after(carteProfil)
+}
+
+
+// ════════════════════════════════════════
+// SOUMISSION DU FORMULAIRE
+// ════════════════════════════════════════
+document.getElementById("formulaire").addEventListener("submit", function(evenement) {
+    evenement.preventDefault()
+
+    if (!validerPage(4)) return
+
+    marquerEtapeTerminee(4)
+
+    // Supprimer l'ancienne carte si elle existe
+    const ancienneCarte = document.querySelector(".carte-profil")
+    if (ancienneCarte) ancienneCarte.remove()
+
+    afficherCarteProfil()
+
+    document.querySelector(".carte-formulaire").scrollIntoView({ behavior: "smooth" })
+})
+
 

@@ -1,0 +1,492 @@
+:root {
+    --couleur-fond: #f5f5f3;
+    --couleur-blanc: #ffffff;
+    --couleur-noir: #0f0f0f;
+    --couleur-gris-clair: #e8e8e8;
+    --couleur-gris-texte: #888888;
+    --couleur-rouge: #e03535;
+    --couleur-rouge-fond: #fff0f0;
+    --couleur-vert: #00c97a;
+    --couleur-vert-fond: #f0fff8;
+    --arrondi: 12px;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--couleur-fond);
+    color: var(--couleur-noir);
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+}
+
+/* ════════════════════════════
+    STEPPER (barre de progression)
+════════════════════════════ */
+
+.stepper-conteneur {
+    max-width: 560px;
+    margin: 0 auto 32px;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+}
+
+/* Chaque étape */
+.etape {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+/* Cercle de l'étape */
+.etape-cercle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--couleur-gris-clair);
+    background: var(--couleur-blanc);
+    color: var(--couleur-gris-texte);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.etape-cercle.actif {
+    background: var(--couleur-noir);
+    border-color: var(--couleur-noir);
+    color: var(--couleur-blanc);
+    box-shadow: 0 0 0 4px rgba(15,15,15,0.1);
+}
+
+.etape-cercle.termine {
+    background: var(--couleur-vert);
+    border-color: var(--couleur-vert);
+    color: var(--couleur-blanc);
+}
+
+/* Texte sous le cercle */
+.etape-texte {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #bbb;
+    margin-top: 6px;
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.etape.actif .etape-texte { color: var(--couleur-noir); }
+.etape.termine .etape-texte { color: var(--couleur-vert); }
+
+/* Ligne entre les étapes */
+.ligne-etape {
+    flex: 1;
+    height: 2px;
+    background: var(--couleur-gris-clair);
+    margin-bottom: 22px;
+    overflow: hidden;
+}
+
+.ligne-remplissage {
+    height: 100%;
+    width: 0%;
+    background: var(--couleur-vert);
+    transition: width 0.4s ease;
+}
+
+.ligne-etape.termine .ligne-remplissage { width: 100%; }
+
+/* ════════════════════════════
+    CARTE FORMULAIRE
+════════════════════════════ */
+
+.carte-formulaire {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--couleur-blanc);
+    border-radius: 20px;
+    padding: 32px 28px;
+    border: 1px solid #e5e5e5;
+}
+
+@media (max-width: 480px) {
+    .carte-formulaire {
+    padding: 24px 16px;
+    border-radius: 16px;
+    }
+}
+
+/* ── Pages du formulaire ── */
+.page-formulaire {
+    display: none;
+}
+
+.page-formulaire.active {
+    display: block;
+    animation: apparition 0.3s ease;
+}
+
+@keyframes apparition {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Titre et sous-titre ── */
+.titre-page {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(22px, 5vw, 32px);
+    line-height: 1.15;
+    margin-bottom: 8px;
+}
+
+.sous-titre-page {
+    color: var(--couleur-gris-texte);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+/* ════════════════════════════
+    CHAMPS DU FORMULAIRE
+════════════════════════════ */
+
+.groupe-champ {
+    margin-bottom: 20px;
+}
+
+.etiquette {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--couleur-noir);
+    margin-bottom: 7px;
+    display: block;
+}
+
+.champ-texte,
+.champ-select {
+    border: 1.5px solid var(--couleur-gris-clair);
+    border-radius: var(--arrondi);
+    padding: 13px 15px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--couleur-blanc);
+    color: var(--couleur-noir);
+    width: 100%;
+    display: block;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.champ-texte:focus,
+.champ-select:focus {
+    outline: none;
+    border-color: var(--couleur-noir);
+    box-shadow: 0 0 0 3px rgba(15,15,15,0.08);
+}
+
+/* État erreur */
+.champ-texte.erreur,
+.champ-select.erreur {
+    border-color: var(--couleur-rouge) !important;
+    background: var(--couleur-rouge-fond) !important;
+    box-shadow: 0 0 0 3px rgba(224,53,53,0.1) !important;
+}
+
+/* État succès */
+.champ-texte.succes,
+.champ-select.succes {
+    border-color: var(--couleur-vert) !important;
+    background: var(--couleur-vert-fond) !important;
+    box-shadow: 0 0 0 3px rgba(0,201,122,0.1) !important;
+}
+
+/* Message d'erreur sous le champ */
+.message-erreur {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--couleur-rouge);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 6px;
+    padding: 7px 10px;
+    background: var(--couleur-rouge-fond);
+    border-radius: 6px;
+    border-left: 3px solid var(--couleur-rouge);
+    animation: glissement 0.2s ease;
+}
+
+.message-erreur::before {
+    content: "⚠";
+    font-size: 11px;
+}
+
+@keyframes glissement {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════
+    CARTES RADIO (choix unique)
+════════════════════════════ */
+
+.groupe-radio {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.carte-radio {
+    flex: 1;
+    min-width: 130px;
+    border: 1.5px solid var(--couleur-gris-clair);
+    border-radius: var(--arrondi);
+    padding: 13px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+    background: var(--couleur-blanc);
+    transition: all 0.2s;
+}
+
+.carte-radio:hover {
+    border-color: #aaa;
+    background: #f9f9f9;
+}
+
+.carte-radio input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--couleur-noir);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.carte-radio.selectionnee {
+    border-color: var(--couleur-noir);
+    background: var(--couleur-noir);
+    color: var(--couleur-blanc);
+}
+
+.carte-radio.erreur-carte {
+    border-color: var(--couleur-rouge);
+    background: var(--couleur-rouge-fond);
+}
+
+/* ════════════════════════════
+    CARTES CHECKBOX (choix multiple)
+════════════════════════════ */
+
+.grille-passions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.carte-passion {
+    border: 1.5px solid var(--couleur-gris-clair);
+    border-radius: var(--arrondi);
+    padding: 11px 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    user-select: none;
+    background: var(--couleur-blanc);
+    transition: all 0.2s;
+}
+
+.carte-passion:hover { border-color: #aaa; }
+
+.carte-passion.selectionnee {
+    border-color: var(--couleur-noir);
+    background: var(--couleur-noir);
+    color: var(--couleur-blanc);
+}
+
+.carte-passion.erreur-carte {
+    border-color: var(--couleur-rouge);
+    background: var(--couleur-rouge-fond);
+}
+
+.carte-passion input {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--couleur-blanc);
+    flex-shrink: 0;
+}
+
+/* Erreur pour les groupes radio/checkbox */
+.erreur-groupe {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--couleur-rouge);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 8px;
+    padding: 7px 10px;
+    background: var(--couleur-rouge-fond);
+    border-radius: 6px;
+    border-left: 3px solid var(--couleur-rouge);
+    animation: glissement 0.2s ease;
+}
+
+.erreur-groupe::before { content: "⚠"; font-size: 11px; }
+
+/* ════════════════════════════
+    TEXTAREA + COMPTEUR
+════════════════════════════ */
+
+.zone-textarea { position: relative; }
+
+textarea.champ-texte {
+    resize: none;
+    min-height: 110px;
+}
+
+.compteur-caracteres {
+    font-size: 11px;
+    color: var(--couleur-gris-texte);
+    margin-top: 5px;
+    text-align: right;
+    display: block;
+}
+
+.compteur-caracteres.avertissement { color: #e07a00; font-weight: 600; }
+.compteur-caracteres.danger { color: var(--couleur-rouge); font-weight: 600; }
+
+/* ════════════════════════════
+    BOUTONS DE NAVIGATION
+════════════════════════════ */
+
+.navigation-boutons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    gap: 12px;
+}
+
+.bouton-retour,
+.bouton-suivant,
+.bouton-envoyer {
+    padding: 13px 26px;
+    border-radius: var(--arrondi);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1.5px solid var(--couleur-noir);
+    transition: all 0.2s;
+}
+
+.bouton-retour {
+    background: transparent;
+    color: var(--couleur-noir);
+}
+
+.bouton-retour:hover { background: var(--couleur-gris-clair); }
+
+.bouton-suivant,
+.bouton-envoyer {
+    background: var(--couleur-noir);
+    color: var(--couleur-blanc);
+    margin-left: auto;
+}
+
+.bouton-suivant:hover,
+.bouton-envoyer:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.bouton-retour.invisible { visibility: hidden; }
+
+/* ════════════════════════════
+    CARTE DE PROFIL FINALE
+════════════════════════════ */
+
+.carte-profil {
+    max-width: 560px;
+    margin: 24px auto 0;
+    border-radius: 20px;
+    padding: 28px;
+    background: var(--couleur-noir);
+    color: var(--couleur-blanc);
+    animation: apparition 0.4s ease;
+}
+
+.badge-succes {
+    display: inline-block;
+    background: var(--couleur-vert);
+    color: #0a3d28;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+}
+
+.carte-profil h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.ligne-profil {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+    font-size: 13px;
+}
+
+.ligne-profil:last-child { border-bottom: none; }
+
+.label-profil {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    min-width: 90px;
+    padding-top: 2px;
+}
+
+.valeur-profil {
+    color: #eee;
+    flex: 1;
+    line-height: 1.5;
+}
+
+.etiquette-passion {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid #333;
+    border-radius: 99px;
+    font-size: 11px;
+    margin: 2px 2px 2px 0;
+    color: #ccc;
+}
+

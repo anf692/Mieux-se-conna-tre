@@ -1,53 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mieux se connaître</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-    
-    <form id="monFormulaire">
 
-        <label for="nomcomplet">Prénom + Nom</label>
-        <input type="text" id="nomcomplet" name="nomcomplet">
-        
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email">
+  <!-- ══ BARRE DE PROGRESSION ══ -->
+  <div class="stepper-conteneur">
+    <div class="stepper" id="stepper">
 
-        <label for="domaine">Ton domaine</label>
-        <select name="domaine" id="domaine">
+      <div class="etape actif" data-numero="1">
+        <div class="etape-cercle actif">1</div>
+        <span class="etape-texte">Identité</span>
+      </div>
+
+      <div class="ligne-etape" id="ligne-1">
+        <div class="ligne-remplissage"></div>
+      </div>
+
+      <div class="etape" data-numero="2">
+        <div class="etape-cercle">2</div>
+        <span class="etape-texte">Profil</span>
+      </div>
+
+      <div class="ligne-etape" id="ligne-2">
+        <div class="ligne-remplissage"></div>
+      </div>
+
+      <div class="etape" data-numero="3">
+        <div class="etape-cercle">3</div>
+        <span class="etape-texte">Passions</span>
+      </div>
+
+      <div class="ligne-etape" id="ligne-3">
+        <div class="ligne-remplissage"></div>
+      </div>
+
+      <div class="etape" data-numero="4">
+        <div class="etape-cercle">4</div>
+        <span class="etape-texte">À propos</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══ FORMULAIRE ══ -->
+  <div class="carte-formulaire">
+    <form id="formulaire" novalidate>
+
+
+      <!-- PAGE 1 : Identité -->
+      <div class="page-formulaire active" id="page-1">
+
+        <h2 class="titre-page">Dis-nous<br>qui tu es.</h2>
+        <p class="sous-titre-page">Commence par les infos de base pour qu'on puisse te retrouver.</p>
+
+        <div class="groupe-champ">
+          <label class="etiquette" for="prenom-nom">Prénom & Nom</label>
+          <input type="text" id="prenom-nom" name="prenom-nom" class="champ-texte" placeholder="Ex : Aminata Diallo">
+        </div>
+
+        <div class="groupe-champ">
+          <label class="etiquette" for="email">Adresse email <span style="color:var(--couleur-rouge)">*</span></label>
+          <input type="email" id="email" name="email" class="champ-texte" placeholder="email@example.com">
+        </div>
+
+        <div class="navigation-boutons">
+          <button type="button" class="bouton-retour invisible">← Retour</button>
+          <button type="button" class="bouton-suivant" onclick="allerPageSuivante(1)">Suivant →</button>
+        </div>
+
+      </div>
+
+
+      <!-- PAGE 2 : Profil technique -->
+      <div class="page-formulaire" id="page-2">
+
+        <h2 class="titre-page">Ton profil<br>technique.</h2>
+        <p class="sous-titre-page">Dis-nous dans quel domaine tu évolues et comment tu travailles.</p>
+
+        <div class="groupe-champ">
+          <label class="etiquette" for="domaine">Ton domaine de prédilection</label>
+          <select id="domaine" name="domaine" class="champ-select">
             <option value="">Sélectionne ton domaine...</option>
-            <option value="informatique">Front-End</option>
-            <option value="sante">Back-End</option>
-            <option value="education">Design/UX</option>
-            <option value="finance">Data</option>
-        </select>
+            <option value="Front-End">Front-End</option>
+            <option value="Back-End">Back-End</option>
+            <option value="Design/UX">Design / UX</option>
+            <option value="Data">Data</option>
+          </select>
+        </div>
+
+        <div class="groupe-champ">
+          <label class="etiquette">Tu es plutôt...</label>
+          <div class="groupe-radio">
+            <label class="carte-radio">
+              <input type="radio" name="chrono" value="matin">
+              ☀️ Early Bird
+            </label>
+            <label class="carte-radio">
+              <input type="radio" name="chrono" value="soir">
+              🦉 Night Owl
+            </label>
+          </div>
+          <div id="erreur-chrono"></div>
+        </div>
+
+        <div class="navigation-boutons">
+          <button type="button" class="bouton-retour" onclick="allerPagePrecedente(2)">← Retour</button>
+          <button type="button" class="bouton-suivant" onclick="allerPageSuivante(2)">Suivant →</button>
+        </div>
+
+      </div>
 
 
-        <label for="matin">Chrono-type du matin</label>
-        <input type="radio" id="matin" name="chrono" value="matin">
+      <!-- PAGE 3 : Passions -->
+      <div class="page-formulaire" id="page-3">
 
-        <label for="soir">Chrono-type du soir</label>
-        <input type="radio" id="soir" name="chrono" value="soir">
+        <h2 class="titre-page">Tes passions.</h2>
+        <p class="sous-titre-page">Coche au moins <strong>2 centres d'intérêt</strong> pour enrichir ton profil.</p>
 
-        <label for="veille-tech">Veille Tech </label>
-        <input type="checkbox" id="veille-tech" name="passion" value="veille-tech">
-        <label for="gaming">Gaming </label>
-        <input type="checkbox" id="gaming" name="passion" value="gaming">
-        <label for="sport">Sport </label>
-        <input type="checkbox" id="sport" name="passion" value="sport">
-        <label for="musique">Musique </label>
-        <input type="checkbox" id="musique" name="passion" value="musique">
-        <label for="lecture">Lecture </label>
-        <input type="checkbox" id="lecture" name="passion" value="lecture">
+        <div class="groupe-champ">
+          <div class="grille-passions">
+            <label class="carte-passion">
+              <input type="checkbox" name="passion" value="veille-tech">Veille Tech
+            </label>
+            <label class="carte-passion">
+              <input type="checkbox" name="passion" value="gaming">Gaming
+            </label>
+            <label class="carte-passion">
+              <input type="checkbox" name="passion" value="sport">Sport
+            </label>
+            <label class="carte-passion">
+              <input type="checkbox" name="passion" value="musique">Musique
+            </label>
+            <label class="carte-passion">
+              <input type="checkbox" name="passion" value="lecture">Lecture
+            </label>
+          </div>
+          <div id="erreur-passion"></div>
+        </div>
 
-        <label for="message">Présentation libre</label>
-        <textarea id="message" name="message" minlength="25" maxlength="255"></textarea>
+        <div class="navigation-boutons">
+          <button type="button" class="bouton-retour" onclick="allerPagePrecedente(3)">← Retour</button>
+          <button type="button" class="bouton-suivant" onclick="allerPageSuivante(3)">Suivant →</button>
+        </div>
 
-        <button type="submit">Envoyer</button>
+      </div>
+
+
+      <!-- PAGE 4 : À propos -->
+      <div class="page-formulaire" id="page-4">
+
+        <h2 class="titre-page">Parle-nous<br>de toi.</h2>
+        <p class="sous-titre-page">Une anecdote drôle ou ton ambition dans la tech — à toi !</p>
+
+        <div class="groupe-champ">
+          <label class="etiquette" for="message">Ton message</label>
+          <div class="zone-textarea">
+            <textarea id="message" name="message" class="champ-texte" placeholder="Min. 25 caractères, max. 255..."></textarea>
+          </div>
+          <span class="compteur-caracteres" id="compteur">255 caractères restants</span>
+        </div>
+
+        <div class="navigation-boutons">
+          <button type="button" class="bouton-retour" onclick="allerPagePrecedente(4)">Retour</button>
+          <button type="submit" class="bouton-envoyer">Envoyer</button>
+        </div>
+
+      </div>
+
+
     </form>
+  </div>
 
-    <script src="./app.js"></script>
+
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
