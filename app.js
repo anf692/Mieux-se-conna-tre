@@ -86,3 +86,17 @@ function validateSelect(input) {
   showSuccess(input)
   return true
 }
+
+function validateRadio(name) {
+  const radio = document.querySelector(`input[name="${name}"]:checked`)
+  const premierRadio = document.querySelector(`input[name="${name}"]`)
+
+  if (!radio) {
+    showError(premierRadio, "Veuillez sélectionner une option")
+    return false
+  }
+
+  showSuccess(premierRadio)
+  return true
+}
+
