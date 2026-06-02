@@ -88,7 +88,7 @@ function validerEmail(champ) {
     }
 
     // Expression régulière simple pour valider le format de l'email
-    const regexEmail = /^[^\s@]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
+    const regexEmail = /^[^\s@]+@[a-zA-Z-]+(\.[a-zA-Z]{2,})+$/;
     
     if (!regexEmail.test(valeur)) {
     afficherErreur(champ, "Format invalide — ex: nom@domaine.com")
