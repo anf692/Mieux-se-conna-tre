@@ -47,19 +47,32 @@ function effacerErreurGroupe(idConteneur) {
 // VALIDER LE CHAMP PRÉNOM / NOM
 // ════════════════════════════════════════
 function validerPrenomNom(champ) {
-    const valeur = champ.value.trim()
+    let valeur = champ.value
+        .replace(/\s+/g, " ")
+        .trim();
+
+    champ.value = valeur; // met à jour le champ
 
     if (valeur === "") {
-    afficherErreur(champ, "Ce champ est obligatoire")
-    return false
-    }
-    if (valeur.length < 3) {
-    afficherErreur(champ, "Minimum 3 caractères requis")
-    return false
+        afficherErreur(champ, "Ce champ est obligatoire");
+        return false;
     }
 
-    afficherSucces(champ)
-    return true
+    // lettres + espaces uniquement (comme ton besoin réel)
+    const regex = /^[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+)*$/;
+
+    if (!regex.test(valeur)) {
+        afficherErreur(champ, "Seules les lettres et espaces sont autorisés");
+        return false;
+    }
+
+    if (valeur.length < 3) {
+        afficherErreur(champ, "Minimum 3 caractères requis");
+        return false;
+    }
+
+    afficherSucces(champ);
+    return true;
 }
 
 
@@ -73,7 +86,11 @@ function validerEmail(champ) {
     afficherErreur(champ, "L'email est obligatoire")
     return false
     }
-    if (!valeur.includes("@") || !valeur.includes(".")) {
+
+    // Expression régulière simple pour valider le format de l'email
+    const regexEmail = /^[^\s@]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    
+    if (!regexEmail.test(valeur)) {
     afficherErreur(champ, "Format invalide — ex: nom@domaine.com")
     return false
     }
@@ -371,7 +388,6 @@ function afficherCarteProfil() {
 
     document.querySelector(".carte-formulaire").after(carteProfil)
 }
-
 
 // ════════════════════════════════════════
 // SOUMISSION DU FORMULAIRE
