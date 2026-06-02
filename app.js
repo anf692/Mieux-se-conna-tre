@@ -59,7 +59,7 @@ function validerPrenomNom(champ) {
     }
 
     // lettres + espaces uniquement (comme ton besoin réel)
-    const regex = /^[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+)*$/;
+    const regex = /^[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+)+$/;
 
     if (!regex.test(valeur)) {
         afficherErreur(champ, "Seules les lettres et espaces sont autorisés");
@@ -104,13 +104,21 @@ function validerEmail(champ) {
 // VALIDER LE SELECT (liste déroulante)
 // ════════════════════════════════════════
 function validerSelect(champ) {
-    if (champ.value === "") {
+  // Liste des valeurs autorisées
+  const valeursAutorisees = ["Front-End", "Back-End", "Design/UX", "Data"]
+
+  if (champ.value === "") {
     afficherErreur(champ, "Fais un choix pour continuer")
     return false
-    }
+  }
 
-    afficherSucces(champ)
-    return true
+  if (!valeursAutorisees.includes(champ.value)) {
+    afficherErreur(champ, "Valeur non autorisée")
+    return false
+  }
+
+  afficherSucces(champ)
+  return true
 }
 
 
