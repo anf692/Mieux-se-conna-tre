@@ -1,4 +1,4 @@
-// profil = document.querySelector(".carte-profil")
+mesProfil = document.querySelector("#profil-container")
 listProfil=[]
 
 // ════════════════════════════════════════
@@ -401,6 +401,9 @@ function mettreAJourCompteur(textarea) {
 // ════════════════════════════════════════
 function afficherCarteProfil(profil) {
 
+    const colonne = document.createElement("div")
+    colonne.classList.add("col-12", "col-md-4", "col-lg-3") 
+
     const carteProfil = document.createElement("div")
     carteProfil.classList.add("carte-profil")
 
@@ -429,7 +432,10 @@ function afficherCarteProfil(profil) {
     </div>
     `
 
-    document.querySelector(".carte-formulaire").after(carteProfil)
+    mesProfil.appendChild(carteProfil)
+
+    // On ajoute la colonne dans le conteneur
+    document.getElementById("profil-container").appendChild(colonne)
 }
 
 // ════════════════════════════════════════
