@@ -403,9 +403,30 @@ document.getElementById("formulaire").addEventListener("submit", function(evenem
     const ancienneCarte = document.querySelector(".carte-profil")
     if (ancienneCarte) ancienneCarte.remove()
 
+    // Afficher la carte de profil
     afficherCarteProfil()
 
-    document.querySelector(".carte-formulaire").scrollIntoView({ behavior: "smooth" })
+    // Remettre le formulaire à zéro
+    document.getElementById("formulaire").reset()
+
+    // Remettre tous les cercles du stepper à zéro
+    document.querySelectorAll(".etape").forEach(function(etape) {
+        etape.classList.remove("actif", "termine")
+        const cercle = etape.querySelector(".etape-cercle")
+        cercle.classList.remove("actif", "termine")
+        cercle.textContent = etape.getAttribute("data-numero")
+    })
+
+    // Remettre toutes les lignes à zéro
+    document.querySelectorAll(".ligne-etape").forEach(function(ligne) {
+        ligne.classList.remove("termine")
+    })
+
+    // Retourner à la page 1 et activer l'étape 1
+    afficherPage(1)
+
+    // Scroll vers le haut
+    window.scrollTo({ top: 0, behavior: "smooth" })
 })
 
 
