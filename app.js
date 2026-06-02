@@ -222,6 +222,44 @@ function validerPage(numeroDePage) {
 
 
 // ════════════════════════════════════════
+// VALIDER TOUT LE FORMULAIRE (avant soumission)
+// ════════════════════════════════════════
+function validerTout() {
+  const ok1 = validerPrenomNom(document.getElementById("prenom-nom"))
+  const ok2 = validerEmail(document.getElementById("email"))
+
+  // Si page 1 a une erreur → on y retourne
+  if (!ok1 || !ok2) {
+    afficherPage(1)
+    return false
+  }
+
+  const ok3 = validerSelect(document.getElementById("domaine"))
+  const ok4 = validerRadio("chrono")
+
+  // Si page 2 a une erreur → on y retourne
+  if (!ok3 || !ok4) {
+    afficherPage(2)
+    return false
+  }
+
+  const ok5 = validerPassions("passion")
+
+  // Si page 3 a une erreur → on y retourne
+  if (!ok5) {
+    afficherPage(3)
+    return false
+  }
+
+  const ok6 = validerMessage(document.getElementById("message"))
+
+  // Si page 4 a une erreur → on reste là
+  if (!ok6) return false
+
+  return true
+}
+
+// ════════════════════════════════════════
 // NAVIGATION : ALLER À LA PAGE SUIVANTE
 // ════════════════════════════════════════
 function allerPageSuivante(pageActuelle) {
@@ -403,7 +441,7 @@ function afficherCarteProfil() {
 document.getElementById("formulaire").addEventListener("submit", function(evenement) {
     evenement.preventDefault()
 
-    if (!validerPage(4)) return
+    if (!validerTout()) return 
 
     marquerEtapeTerminee(4)
 
