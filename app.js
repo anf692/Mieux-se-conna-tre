@@ -1,3 +1,6 @@
+// profil = document.querySelector(".carte-profil")
+listProfil=[]
+
 // ════════════════════════════════════════
 // AFFICHER UNE ERREUR SUR UN CHAMP
 // ════════════════════════════════════════
@@ -396,39 +399,33 @@ function mettreAJourCompteur(textarea) {
 // ════════════════════════════════════════
 // AFFICHER LA CARTE DE PROFIL
 // ════════════════════════════════════════
-function afficherCarteProfil() {
-    const nom     = document.getElementById("prenom-nom").value.trim()
-    const email   = document.getElementById("email").value.trim()
-    const domaine = document.getElementById("domaine").value
-    const chrono  = document.querySelector('input[name="chrono"]:checked').value
-    const passions = [...document.querySelectorAll('input[name="passion"]:checked')].map(function(c) { return c.value })
-    const message = document.getElementById("message").value.trim()
+function afficherCarteProfil(profil) {
 
     const carteProfil = document.createElement("div")
     carteProfil.classList.add("carte-profil")
 
     carteProfil.innerHTML = `
     <span class="badge-succes">✓ Profil créé</span>
-    <h2>${nom}</h2>
+    <h2>${profil.nom}</h2>
     <div class="ligne-profil">
         <span class="label-profil">Email</span>
-        <span class="valeur-profil">${email}</span>
+        <span class="valeur-profil">${profil.email}</span>
     </div>
     <div class="ligne-profil">
         <span class="label-profil">Domaine</span>
-        <span class="valeur-profil">${domaine}</span>
+        <span class="valeur-profil">${profil.domaine}</span>
     </div>
     <div class="ligne-profil">
         <span class="label-profil">Chrono-type</span>
-        <span class="valeur-profil">${chrono === "matin" ? "☀️ Early Bird" : "🦉 Night Owl"}</span>
+        <span class="valeur-profil">${profil.chrono === "matin" ? "☀️ Early Bird" : "🦉 Night Owl"}</span>
     </div>
     <div class="ligne-profil">
         <span class="label-profil">Passions</span>
-        <span class="valeur-profil">${passions.map(function(p) { return `<span class="etiquette-passion">${p}</span>` }).join("")}</span>
+        <span class="valeur-profil">${profil.passions.map(function(p) { return `<span class="etiquette-passion">${p}</span>` }).join("")}</span>
     </div>
     <div class="ligne-profil">
         <span class="label-profil">Anecdote</span>
-        <span class="valeur-profil">${message}</span>
+        <span class="valeur-profil">${profil.message}</span>
     </div>
     `
 
@@ -441,16 +438,33 @@ function afficherCarteProfil() {
 document.getElementById("formulaire").addEventListener("submit", function(evenement) {
     evenement.preventDefault()
 
+    // Récupérer les données du formulaire
+    const profil = {
+        nom: document.getElementById("prenom-nom").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        domaine: document.getElementById("domaine").value,
+        chrono: document.querySelector('input[name="chrono"]:checked').value,
+        passions: [...document.querySelectorAll('input[name="passion"]:checked')].map(c => c.value),
+        message: document.getElementById("message").value.trim()
+    }
+
     if (!validerTout()) return 
 
     marquerEtapeTerminee(4)
 
-    // Supprimer l'ancienne carte si elle existe
-    const ancienneCarte = document.querySelector(".carte-profil")
-    if (ancienneCarte) ancienneCarte.remove()
+    
+    // Ajouter le nouveau profil dans la liste des profils sur le localStorage
+    listProfil.push(profil)
 
-    // Afficher la carte de profil
-    afficherCarteProfil()
+    //convertir la liste en JSON et la stocker dans le localStorage
+    localStorage.setItem("listProfil", JSON.stringify(listProfil))
+
+    // Nettoyer les anciennes cartes
+    document.querySelectorAll(".carte-profil").forEach(c => c.remove())
+
+    // Afficher toutes les cartes
+    listProfil.forEach(p => afficherCarteProfil(p))
+
 
     // Remettre le formulaire à zéro
     document.getElementById("formulaire").reset()
@@ -474,5 +488,18 @@ document.getElementById("formulaire").addEventListener("submit", function(evenem
     // Scroll vers le haut
     window.scrollTo({ top: 0, behavior: "smooth" })
 })
+
+// ════════════════════════════════════════
+// CHARGER LES PROFILS DEPUIS LE LOCALSTORAGE
+// ════════════════════════════════════════
+function chargerProfils() {
+    const data = localStorage.getItem("listProfil")
+    if (data) {
+        listProfil = JSON.parse(data)
+        listProfil.forEach(p => afficherCarteProfil(p))
+    }
+}
+
+chargerProfils()
 
 
