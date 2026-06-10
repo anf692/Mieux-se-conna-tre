@@ -399,8 +399,8 @@ function mettreAJourCompteur(textarea) {
 // ════════════════════════════════════════
 // AFFICHER LA CARTE DE PROFIL
 // ════════════════════════════════════════
-function afficherCarteProfil(profil) {
-
+async function afficherCarteProfil(profil) {
+    
     const colonne = document.createElement("div")
     colonne.classList.add("col-12", "col-md-4", "col-lg-3") 
 
@@ -426,9 +426,12 @@ function afficherCarteProfil(profil) {
         <span class="label-profil">Passions</span>
         <span class="valeur-profil">${profil.passions.map(function(p) { return `<span class="etiquette-passion">${p}</span>` }).join("")}</span>
     </div>
-    <div class="ligne-profil">
-        <span class="label-profil">Anecdote</span>
-        <span class="valeur-profil">${profil.message}</span>
+    
+     <div class="ligne-profil">
+      <span class="label-profil">✨ Bio IA</span>
+      <span class="valeur-profil" id="bio-${profil.nom}">
+        ⏳ Génération en cours...
+      </span>
     </div>
     `
 
@@ -436,6 +439,12 @@ function afficherCarteProfil(profil) {
 
     // On ajoute la colonne dans le conteneur
     document.getElementById("profil-container").appendChild(colonne)
+
+    // On demande la bio à l'IA EN ARRIÈRE-PLAN
+    const bio = await genererBio(profil)
+
+    // Quand l'IA répond → on met à jour juste la bio
+    document.getElementById(`bio-${profil.nom}`).textContent = bio
 }
 
 // ════════════════════════════════════════
@@ -504,6 +513,48 @@ function chargerProfils() {
         listProfil = JSON.parse(data)
         listProfil.forEach(p => afficherCarteProfil(p))
     }
+}
+
+
+// ════════════════════════════════════════
+// GÉNÉRER UNE BIO AVEC L'IA
+// ════════════════════════════════════════
+async function genererBio(profil) {
+
+  // Le message qu'on envoie à l'IA
+  const messagePourIA = `
+    Tu es un assistant sympa.
+    Génère une courte bio de 4 phrases maximum en français
+    pour cette personne :
+    - Nom : ${profil.nom}
+    - Domaine : ${profil.domaine}
+    - Chrono-type : ${profil.chrono === "matin" ? "Early Bird" : "Night Owl"}
+    - Passions : ${profil.passions.join(", ")}
+    Réponds uniquement avec la bio, rien d'autre.
+  `
+
+  // On envoie la requête à Ollama
+  const reponse = await fetch("/api/ai", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        model: "openai/gpt-oss-20b:freeze-2024-06-01",
+        messages: [
+        {
+            role: "user",
+            content: messagePourIA
+        }
+        ],
+
+    })
+  })
+
+  // On récupère la réponse
+  const donnees = await reponse.json()
+  const bio = donnees.choices[0].message.content
+  return bio
 }
 
 chargerProfils()
